@@ -3,7 +3,7 @@ import os
 import json
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 from simulation.metrics_reader import MetricsReader
 from simulation.setpoint_injector import SetpointInjector
 from simulation.energyplus_wrapper import EnergyPlusWrapper

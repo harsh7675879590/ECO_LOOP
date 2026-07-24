@@ -1,8 +1,10 @@
+import os
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
 import torch
 import os
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 from peft import LoraConfig, get_peft_model
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig
 from datasets import load_dataset
 
 # We'll use the Qwen 1.5B instruct model
@@ -46,7 +48,7 @@ def finetune():
     dataset = dataset.map(format_chat_template)
     
     # Training arguments
-    training_args = TrainingArguments(
+    training_args = SFTConfig(
         output_dir=OUTPUT_DIR,
         num_train_epochs=3,
         per_device_train_batch_size=2,
@@ -56,15 +58,15 @@ def finetune():
         fp16=torch.cuda.is_available(),
         logging_steps=10,
         save_steps=100,
-        report_to="none"
+        report_to="none",
+        dataset_text_field="text",
+        max_seq_length=512
     )
     
     trainer = SFTTrainer(
         model=model,
         args=training_args,
-        train_dataset=dataset,
-        dataset_text_field="text",
-        max_seq_length=512
+        train_dataset=dataset
     )
     
     print("Starting fine-tuning... (this may take a while depending on hardware)")
