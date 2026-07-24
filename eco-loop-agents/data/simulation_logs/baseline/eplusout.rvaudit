@@ -1,0 +1,16 @@
+ ReadVarsESO
+ processing:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\building_models\baseline.rvi
+ input file:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\data\simulation_logs\baseline\eplusout.eso
+ output file:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\data\simulation_logs\baseline\eplusout.csv
+ getting all vars from:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\data\simulation_logs\baseline\eplusout.eso
+  number variables requested for output=          73
+ ReadVars Run Time=00hr 00min  2.64sec
+ ReadVarsESO program completed successfully.
+ ReadVarsESO
+ processing:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\building_models\baseline.mvi
+ input file:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\data\simulation_logs\baseline\eplusout.mtr
+ output file:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\data\simulation_logs\baseline\eplusmtr.csv
+ getting all vars from:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\data\simulation_logs\baseline\eplusout.mtr
+  number variables requested for output=          20
+ ReadVars Run Time=00hr 00min  0.02sec
+ ReadVarsESO program completed successfully.
