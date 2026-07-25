@@ -1,26 +1,72 @@
+"""
+config.py — Central configuration for Eco-Loop Building Agents
+Honeywell Campus Hackathon
+
+Edit this file to match your friend's machine setup.
+"""
+
 import os
 
-# Paths
-BASE_DIR = r"C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents"
-ENERGYPLUS_PATH = r"C:\EnergyPlusV23-2-0\energyplus.exe"
-BASELINE_IDF = os.path.join(BASE_DIR, "building_models", "baseline.idf")
+# ──────────────────────────────────────────────
+# MODE SELECTION
+# ──────────────────────────────────────────────
+# Set to True to run without EnergyPlus installed (uses realistic mock data)
+# Set to False when EnergyPlus is installed and you want the real simulation
+MOCK_MODE = True  # <-- flip to False after EnergyPlus is installed
 
-# We will use the default Chicago weather file that comes with EnergyPlus
-WEATHER_FILE = r"C:\EnergyPlusV23-2-0\WeatherData\USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
-OUTPUT_DIR = os.path.join(BASE_DIR, "data", "simulation_logs")
+# ──────────────────────────────────────────────
+# LLM SETTINGS
+# ──────────────────────────────────────────────
+LLM_PROVIDER = "ollama"         # "ollama" (offline) or "groq" (online)
+OLLAMA_MODEL  = "qwen2.5:7b"   # change to "qwen2.5:3b" if RAM < 8GB
+OLLAMA_BASE_URL = "http://localhost:11434"
 
-# LLM Config
-OLLAMA_MODEL = "qwen2.5:7b"           # Main agent
-FINETUNED_MODEL = "qwen2.5:1.5b"      # Fine-tuned specialist
+# Groq settings (only needed if LLM_PROVIDER = "groq")
+GROQ_API_KEY  = os.environ.get("GROQ_API_KEY", "")
+GROQ_MODEL    = "llama-3.1-8b-instant"
 
-# Control Thresholds
+# ──────────────────────────────────────────────
+# ENERGYPLUS SETTINGS
+# ──────────────────────────────────────────────
+ENERGYPLUS_DIR = r"C:\EnergyPlusV23-2-0"
+ENERGYPLUS_EXE = os.path.join(ENERGYPLUS_DIR, "energyplus.exe")
+
+# Path to the example IDF file (comes with EnergyPlus install)
+IDF_FILE = os.path.join(
+    ENERGYPLUS_DIR,
+    "ExampleFiles",
+    "1ZoneUncontrolled.idf"
+)
+WEATHER_FILE = os.path.join(
+    ENERGYPLUS_DIR,
+    "WeatherData",
+    "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw"
+)
+EP_OUTPUT_DIR = "ep_output"
+
+# ──────────────────────────────────────────────
+# BUILDING / COMFORT SETTINGS
+# ──────────────────────────────────────────────
+# Thermal comfort: PMV must stay in [-0.5, +0.5]
 PMV_MIN = -0.5
-PMV_MAX = 0.5
-TEMP_MIN_C = 20.0
-TEMP_MAX_C = 26.0
-COOLING_SP_DEFAULT = 24.0
-HEATING_SP_DEFAULT = 21.0
+PMV_MAX =  0.5
 
-# Simulation Parameters
-TIMESTEP_MINUTES = 15
-SIMULATION_HOURS = 4
+# Allowed HVAC setpoint range (°C)
+SETPOINT_MIN = 18.0
+SETPOINT_MAX = 26.0
+DEFAULT_SETPOINT = 22.0
+
+# Zones to control (must match IDF zone names)
+ZONES = ["ZONE ONE"]
+
+# ──────────────────────────────────────────────
+# LOOP SETTINGS
+# ──────────────────────────────────────────────
+LOOP_INTERVAL_SECONDS = 2      # delay between each sense→think→act cycle
+MAX_TIMESTEPS = 50             # how many cycles to run (set to None for infinite)
+
+# ──────────────────────────────────────────────
+# LOGGING
+# ──────────────────────────────────────────────
+LOG_FILE      = "eco_loop_log.csv"
+BASELINE_LOG  = "baseline_results.csv"

@@ -4,7 +4,7 @@
  output file:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\data\simulation_logs\ai_run\eplusout.csv
  getting all vars from:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\data\simulation_logs\ai_run\eplusout.eso
   number variables requested for output=          73
- ReadVars Run Time=00hr 00min  2.06sec
+ ReadVars Run Time=00hr 00min  1.62sec
  ReadVarsESO program completed successfully.
  ReadVarsESO
  processing:C:\Users\harsh\OneDrive\Desktop\ECO\eco-loop-agents\building_models\baseline.mvi
