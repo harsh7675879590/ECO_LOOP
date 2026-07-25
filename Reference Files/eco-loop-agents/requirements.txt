@@ -1,9 +1,0 @@
-eppy
-fastmcp
-ollama
-groq
-streamlit
-pandas
-plotly
-numpy
-requests

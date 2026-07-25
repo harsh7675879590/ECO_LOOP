@@ -1,0 +1,13 @@
+ ReadVarsESO
+ processing:C:\EnergyPlusV23-2-0\ExampleFiles\1ZoneUncontrolled.rvi
+ Requested ESO file=eplusout.eso
+ does not exist.  ReadVarsESO program terminated.
+ ReadVarsESO program terminated.
+ ReadVarsESO
+ processing:C:\EnergyPlusV23-2-0\ExampleFiles\1ZoneUncontrolled.mvi
+ input file:ep_output\eplusout.mtr
+ output file:ep_output\eplusmtr.csv
+ getting all vars from:ep_output\eplusout.mtr
+  number variables requested for output=           3
+ ReadVars Run Time=00hr 00min  0.19sec
+ ReadVarsESO program completed successfully.

@@ -31,104 +31,154 @@ st.set_page_config(
 )
 
 # ──────────────────────────────────────────────
-# CUSTOM CSS
+# CUSTOM CSS — dark, Grafana-style, animated
 # ──────────────────────────────────────────────
 st.markdown("""
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
 
-  html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
+  html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes livePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(16,229,163,0.55); }
+    70%  { box-shadow: 0 0 0 8px rgba(16,229,163,0); }
+    100% { box-shadow: 0 0 0 0 rgba(16,229,163,0); }
+  }
+  @keyframes glowCycle {
+    0%, 100% { box-shadow: 0 0 0px rgba(0,212,255,0); }
+    50%      { box-shadow: 0 0 14px rgba(0,212,255,0.18); }
   }
 
-  /* Main background */
-  [data-testid="stApp"], .main, .block-container { 
-    background-color: #F4F6F8 !important; 
-    color: #1F2937 !important;
+  [data-testid="stApp"], .main, .block-container {
+    background: radial-gradient(ellipse at top, #10141F 0%, #0A0D14 60%, #06080D 100%) !important;
+    color: #E6EDF3 !important;
   }
 
-  /* Header */
   .hero {
-    background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    border-radius: 12px;
-    padding: 2rem 2.5rem;
+    background: linear-gradient(135deg, #12172A 0%, #0D1220 100%);
+    border: 1px solid rgba(0,212,255,0.25);
+    box-shadow: 0 0 24px rgba(0,102,255,0.12), inset 0 1px 0 rgba(255,255,255,0.03);
+    border-radius: 14px;
+    padding: 1.8rem 2.5rem;
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    justify-content: space-between;
+    animation: fadeInUp 0.5s ease-out;
   }
+  .hero-left { display: flex; align-items: center; gap: 1.5rem; }
   .hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     font-weight: 800;
-    color: #1F2937;
+    background: linear-gradient(90deg, #00D4FF, #A78BFA 55%, #FF4FD8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin: 0;
   }
-  .hero p { color: #6B7280; margin: 0; font-size: 0.95rem; }
+  .hero p { color: #8B96A8; margin: 0; font-size: 0.95rem; }
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(16,229,163,0.08);
+    border: 1px solid rgba(16,229,163,0.4);
+    color: #10E5A3;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px;
+    padding: 6px 14px; border-radius: 999px;
+  }
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10E5A3;
+    animation: livePulse 1.6s infinite;
+  }
 
-  /* Metric cards */
   .metric-card {
-    background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    border-radius: 12px;
-    padding: 1.2rem 1.5rem;
-    text-align: center;
-    transition: box-shadow 0.3s;
+    background: linear-gradient(160deg, #131A28 0%, #0E141F 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 1.1rem 1.4rem;
+    text-align: left;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    animation: fadeInUp 0.5s ease-out both;
   }
-  .metric-card:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-  .metric-value { font-size: 2rem; font-weight: 700; color: #1F2937; }
-  .metric-label { font-size: 0.8rem; color: #6B7280; text-transform: uppercase; letter-spacing: 1px; }
-  .metric-sub   { font-size: 0.9rem; color: #10B981; margin-top: 4px; }
+  .metric-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(0,212,255,0.4);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 16px rgba(0,212,255,0.15);
+  }
+  .metric-top { display:flex; align-items:center; justify-content:space-between; }
+  .metric-value { font-size: 1.9rem; font-weight: 800; color: #F0F4F8; letter-spacing: -0.5px; }
+  .metric-label { font-size: 0.72rem; color: #6E7B90; text-transform: uppercase; letter-spacing: 1.4px; margin-top: 2px;}
+  .metric-sub   { font-size: 0.82rem; margin-top: 6px; font-weight: 600; }
+  .metric-icon  { font-size: 1.4rem; opacity: 0.85; }
 
-  /* Status badges */
-  .badge-ok   { color: #10B981; font-weight: 600; }
-  .badge-warn { color: #F59E0B; font-weight: 600; }
-  .badge-bad  { color: #EF4444; font-weight: 600; }
+  .accent-cyan   { border-top: 3px solid #00D4FF; }
+  .accent-green  { border-top: 3px solid #10E5A3; }
+  .accent-amber  { border-top: 3px solid #FFB020; }
+  .accent-magenta{ border-top: 3px solid #FF4FD8; }
+  .accent-violet { border-top: 3px solid #A78BFA; }
 
-  /* Section headers */
+  .badge-ok   { color: #10E5A3; font-weight: 700; }
+  .badge-warn { color: #FFB020; font-weight: 700; }
+  .badge-bad  { color: #FF5A7A; font-weight: 700; }
+
   .section-header {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    color: #1F2937;
-    border-left: 4px solid #4F46E5;
+    color: #E6EDF3;
+    border-left: 4px solid #00D4FF;
     padding-left: 12px;
-    margin: 1.5rem 0 1rem 0;
+    margin: 1.8rem 0 1rem 0;
+    animation: fadeInUp 0.5s ease-out both;
   }
 
-  /* Sidebar */
-  [data-testid="stSidebar"] {
-    background-color: #1A2234 !important;
-  }
-  [data-testid="stSidebar"] * {
-    color: #CBD5E1 !important;
-  }
-  [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
-    color: #FFFFFF !important;
-  }
-
-  /* Agent log */
-  .agent-log {
-    background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.82rem;
-    color: #4B5563;
-    max-height: 260px;
-    overflow-y: auto;
-  }
-  .agent-log .ts  { color: #4F46E5; font-weight: 600; }
-  .agent-log .act { color: #10B981; font-weight: 600; }
-  .agent-log .rsn { color: #374151; }
-  
-  /* Make Streamlit charts transparent to use background */
   .stPlotlyChart {
     background: transparent !important;
+    border-radius: 12px;
+    animation: glowCycle 6s ease-in-out infinite;
   }
+
+  [data-testid="stSidebar"] {
+    background-color: #0B0F17 !important;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  [data-testid="stSidebar"] * { color: #AEB8C8 !important; }
+  [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
+    color: #F0F4F8 !important;
+    font-weight: 700;
+  }
+  [data-testid="stWidgetLabel"] p { color: #E6EDF3 !important; font-weight: 600; }
+
+  .agent-log {
+    background: #0B0F17;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: #AEB8C8;
+    max-height: 280px;
+    overflow-y: auto;
+    animation: fadeInUp 0.6s ease-out both;
+  }
+  .agent-log .ts  { color: #00D4FF; font-weight: 700; }
+  .agent-log .act { color: #A78BFA; font-weight: 700; }
+  .agent-log .rsn { color: #C6D0DC; }
+  .agent-log div  { border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px; }
+
+  [data-testid="stMetric"] {
+    background: linear-gradient(160deg, #131A28 0%, #0E141F 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    animation: fadeInUp 0.6s ease-out both;
+  }
+  [data-testid="stMetricLabel"] { color: #6E7B90 !important; }
+  [data-testid="stMetricValue"] { color: #F0F4F8 !important; }
+  [data-testid="stMetricDelta"] { color: #10E5A3 !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -159,21 +209,26 @@ def load_baseline_data():
 # ──────────────────────────────────────────────
 # COLOUR PALETTE
 # ──────────────────────────────────────────────
-C_AI       = "#4F46E5"    # Indigo
-C_BASELINE = "#94A3B8"    # Slate
-C_PMV_OK   = "#10B981"    # Emerald
-C_PMV_BAD  = "#EF4444"    # Rose
-C_BG       = "#FFFFFF"
-C_GRID     = "#E2E8F0"
+C_AI       = "#00D4FF"    # Electric cyan — AI zone temp
+C_OUTDOOR  = "#FFB020"    # Amber — outdoor temp
+C_PMV      = "#FF4FD8"    # Magenta — PMV line
+C_BASELINE = "#6E7B90"    # Muted slate — baseline series
+C_PMV_OK   = "#10E5A3"    # Emerald green — comfortable / savings
+C_PMV_BAD  = "#FF5A7A"    # Rose — discomfort / alerts
+C_HVAC     = "#A78BFA"    # Violet — HVAC power bars
+C_BG       = "#0E1420"    # Dark chart canvas
+C_GRID     = "rgba(255,255,255,0.08)"
 
 PLOT_LAYOUT = dict(
     paper_bgcolor=C_BG,
     plot_bgcolor =C_BG,
-    font=dict(family="Inter", color="#4B5563", size=12),
-    xaxis=dict(gridcolor=C_GRID, zerolinecolor=C_GRID),
-    yaxis=dict(gridcolor=C_GRID, zerolinecolor=C_GRID),
+    font=dict(family="Inter", color="#AEB8C8", size=12),
+    title_font=dict(color="#F0F4F8", size=14),
+    xaxis=dict(gridcolor=C_GRID, zerolinecolor=C_GRID, linecolor="rgba(255,255,255,0.15)"),
+    yaxis=dict(gridcolor=C_GRID, zerolinecolor=C_GRID, linecolor="rgba(255,255,255,0.15)"),
     margin=dict(l=10, r=10, t=40, b=10),
-    legend=dict(bgcolor="rgba(255,255,255,0.8)", bordercolor="#E2E8F0"),
+    legend=dict(bgcolor="rgba(0,0,0,0)", bordercolor="rgba(255,255,255,0.1)", font=dict(color="#AEB8C8")),
+    hoverlabel=dict(bgcolor="#161B22", font_color="#E6EDF3", bordercolor=C_AI),
 )
 
 
@@ -200,8 +255,21 @@ Autonomous AI feedback loop:
 """)
 
     st.markdown("---")
+    st.markdown("### 🎨 Legend")
+    st.markdown("""
+<div style="font-size:0.85rem; line-height:1.9;">
+<span style="color:#00D4FF">●</span> AI Zone Temp&nbsp;&nbsp;
+<span style="color:#FFB020">●</span> Outdoor<br>
+<span style="color:#FF4FD8">●</span> PMV&nbsp;&nbsp;
+<span style="color:#10E5A3">●</span> Savings / Comfort<br>
+<span style="color:#A78BFA">●</span> HVAC Power&nbsp;&nbsp;
+<span style="color:#6E7B90">●</span> Baseline
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("---")
     st.markdown("### 📁 Log Files")
-    st.code(f"AI:       {LOG_FILE}\nBaseline: {BASELINE_LOG}")
+    st.code(f"AI:       {LOG_FILE}\\nBaseline: {BASELINE_LOG}")
 
 
 # ──────────────────────────────────────────────
@@ -209,11 +277,14 @@ Autonomous AI feedback loop:
 # ──────────────────────────────────────────────
 st.markdown("""
 <div class="hero">
-  <div style="font-size:3rem">🏢</div>
-  <div>
-    <h1>Eco-Loop Building Agents</h1>
-    <p> Autonomous AI-Driven HVAC Optimization · Real-time Dashboard</p>
+  <div class="hero-left">
+    <div style="font-size:3rem">🏢</div>
+    <div>
+      <h1>Eco-Loop Building Agents</h1>
+      <p>Autonomous AI-Driven HVAC Optimization · Real-time Dashboard</p>
+    </div>
   </div>
+  <div class="live-badge"><span class="live-dot"></span> LIVE</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -254,17 +325,19 @@ col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     st.markdown(f"""
-    <div class="metric-card">
+    <div class="metric-card accent-cyan">
+      <div class="metric-top"><span class="metric-icon">🌡️</span></div>
       <div class="metric-value">{last.get('avg_zone_temp_c', '—')}°C</div>
       <div class="metric-label">Zone Temp</div>
-      <div class="metric-sub">outdoor: {last.get('outdoor_temp_c', '—')}°C</div>
+      <div class="metric-sub" style="color:#FFB020">outdoor: {last.get('outdoor_temp_c', '—')}°C</div>
     </div>""", unsafe_allow_html=True)
 
 with col2:
     pmv = last.get('pmv', 0)
     badge = "badge-ok" if PMV_MIN <= (pmv or 0) <= PMV_MAX else "badge-bad"
     st.markdown(f"""
-    <div class="metric-card">
+    <div class="metric-card accent-magenta">
+      <div class="metric-top"><span class="metric-icon">🧭</span></div>
       <div class="metric-value">{pmv:+.2f}</div>
       <div class="metric-label">Current PMV</div>
       <div class="metric-sub {badge}">{last.get('comfort_ok') and 'Comfortable ✅' or 'Discomfort ⚠️'}</div>
@@ -272,28 +345,31 @@ with col2:
 
 with col3:
     st.markdown(f"""
-    <div class="metric-card">
+    <div class="metric-card accent-violet">
+      <div class="metric-top"><span class="metric-icon">⚡</span></div>
       <div class="metric-value">{ai_energy:.3f}</div>
       <div class="metric-label">Energy Used (kWh)</div>
-      <div class="metric-sub">HVAC: {last.get('hvac_kw', '—')} kW</div>
+      <div class="metric-sub" style="color:#A78BFA">HVAC: {last.get('hvac_kw', '—')} kW</div>
     </div>""", unsafe_allow_html=True)
 
 with col4:
     sv = f"{savings_pct}%" if savings_pct is not None else "Run baseline"
-    sv_color = "#64ffda" if savings_pct and savings_pct > 0 else "#ffa726"
+    sv_color = "#10E5A3" if savings_pct and savings_pct > 0 else "#FFB020"
     st.markdown(f"""
-    <div class="metric-card">
+    <div class="metric-card accent-green">
+      <div class="metric-top"><span class="metric-icon">🌱</span></div>
       <div class="metric-value" style="color:{sv_color}">{sv}</div>
       <div class="metric-label">Energy Savings</div>
-      <div class="metric-sub">vs fixed setpoint</div>
+      <div class="metric-sub" style="color:#6E7B90">vs fixed setpoint</div>
     </div>""", unsafe_allow_html=True)
 
 with col5:
     st.markdown(f"""
-    <div class="metric-card">
+    <div class="metric-card accent-amber">
+      <div class="metric-top"><span class="metric-icon">😊</span></div>
       <div class="metric-value">{pmv_ok_pct}%</div>
       <div class="metric-label">Comfort Rate</div>
-      <div class="metric-sub">timesteps in target</div>
+      <div class="metric-sub" style="color:#6E7B90">timesteps in target</div>
     </div>""", unsafe_allow_html=True)
 
 
@@ -308,12 +384,14 @@ with col_a:
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=ai_df["timestep"], y=ai_df["avg_zone_temp_c"],
-        name="AI Zone Temp", line=dict(color=C_AI, width=2),
-        fill="tozeroy", fillcolor="rgba(0,212,255,0.07)"
+        name="AI Zone Temp", line=dict(color=C_AI, width=3),
+        mode="lines+markers", marker=dict(size=5, color=C_AI),
+        fill="tozeroy", fillcolor="rgba(0,212,255,0.12)"
     ))
     fig.add_trace(go.Scatter(
         x=ai_df["timestep"], y=ai_df["outdoor_temp_c"],
-        name="Outdoor Temp", line=dict(color="#ffa726", width=1.5, dash="dot")
+        name="Outdoor Temp", line=dict(color=C_OUTDOOR, width=2, dash="dot"),
+        mode="lines+markers", marker=dict(size=4, color=C_OUTDOOR)
     ))
     if has_base and show_baseline:
         fig.add_trace(go.Scatter(
@@ -332,19 +410,19 @@ with col_b:
     # Comfort band
     fig2.add_hrect(
         y0=PMV_MIN, y1=PMV_MAX,
-        fillcolor="rgba(100,255,218,0.07)",
+        fillcolor="rgba(16,229,163,0.10)",
         line_width=0, annotation_text="Comfort Zone",
         annotation_position="top left",
         annotation_font_color=C_PMV_OK
     )
     fig2.add_trace(go.Scatter(
         x=ai_df["timestep"], y=ai_df["pmv"],
-        name="AI PMV", line=dict(color=C_AI, width=2),
+        name="AI PMV", line=dict(color=C_PMV, width=2.5),
         mode="lines+markers",
         marker=dict(
             color=[C_PMV_OK if PMV_MIN <= v <= PMV_MAX else C_PMV_BAD
                    for v in ai_df["pmv"]],
-            size=5
+            size=7, line=dict(width=1, color="#0E1420")
         )
     ))
     if has_base and show_baseline:
@@ -374,15 +452,16 @@ with col_c:
     fig3 = go.Figure()
     fig3.add_trace(go.Scatter(
         x=ai_df["timestep"], y=ai_df["energy_kwh"],
-        name="AI Agent", line=dict(color=C_AI, width=2.5),
-        fill="tozeroy", fillcolor="rgba(0,212,255,0.08)"
+        name="AI Agent", line=dict(color=C_PMV_OK, width=3),
+        mode="lines+markers", marker=dict(size=5, color=C_PMV_OK),
+        fill="tozeroy", fillcolor="rgba(16,229,163,0.12)"
     ))
     if has_base and show_baseline:
         fig3.add_trace(go.Scatter(
             x=base_df["timestep"], y=base_df["energy_kwh"],
             name="Baseline (Fixed Setpoint)",
-            line=dict(color=C_BASELINE, width=2.5, dash="dash"),
-            fill="tozeroy", fillcolor="rgba(255,167,38,0.05)"
+            line=dict(color=C_BASELINE, width=2, dash="dash"),
+            fill="tozeroy", fillcolor="rgba(110,123,144,0.06)"
         ))
     fig3.update_layout(
         title="Cumulative Energy Consumption (kWh)",
@@ -393,11 +472,16 @@ with col_c:
 
 with col_d:
     fig4 = go.Figure()
+    # Color bars on a gradient scale so spikes stand out (like the reference dashboard)
+    hvac_vals = ai_df["hvac_kw"]
     fig4.add_trace(go.Bar(
-        x=ai_df["timestep"], y=ai_df["hvac_kw"],
+        x=ai_df["timestep"], y=hvac_vals,
         name="HVAC Power (kW)",
-        marker_color=C_AI,
-        marker_line_width=0,
+        marker=dict(
+            color=hvac_vals,
+            colorscale=[[0, "#00D4FF"], [0.5, "#A78BFA"], [1, "#FF4FD8"]],
+            line=dict(width=0),
+        ),
     ))
     fig4.update_layout(
         title="HVAC Power Draw per Timestep (kW)",

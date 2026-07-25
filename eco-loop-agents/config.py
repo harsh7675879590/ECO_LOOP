@@ -12,7 +12,7 @@ import os
 # ──────────────────────────────────────────────
 # Set to True to run without EnergyPlus installed (uses realistic mock data)
 # Set to False when EnergyPlus is installed and you want the real simulation
-MOCK_MODE = True  # <-- flip to False after EnergyPlus is installed
+MOCK_MODE = True  # <-- Keep this True for the real-time Dashboard Demo
 
 # ──────────────────────────────────────────────
 # LLM SETTINGS
