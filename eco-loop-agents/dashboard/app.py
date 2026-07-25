@@ -61,7 +61,7 @@ with col_left:
     fig.add_hline(y=26, line_dash="dash", line_color="#ff6b6b", annotation_text="Max Cooling SP")
     fig.add_hline(y=20, line_dash="dash", line_color="#4ecdc4", annotation_text="Min Heating SP")
     fig.update_layout(template="plotly_dark", height=300)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 with col_right:
     st.subheader("Energy: AI vs Baseline")
@@ -81,7 +81,7 @@ with col_right:
         textposition="auto"
     ))
     fig2.update_layout(template="plotly_dark", height=300)
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, width='stretch')
 
 # LLM Reasoning Log
 st.subheader("🧠 LLM Decision Log")
