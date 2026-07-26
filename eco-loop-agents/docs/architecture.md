@@ -47,5 +47,10 @@ The system utilizes a structured **System Prompt** enforcing constraint-based re
 - **Local Execution:** By utilizing Ollama with a quantized 7B model, network latency is eliminated.
 - **History Pruning:** The conversation context window is strictly truncated to the last 20 turns, preventing token bloat and maintaining constant O(1) inference time throughout a multi-day simulation horizon.
 
+### 4.3 Handling Lengthy Simulation Logs
+EnergyPlus generates extremely dense `.eso` and `.csv` files (often millions of rows for an annual run). To prevent overwhelming the LLM's context window:
+- **Incremental Polling:** The system parses only the most recent appended row at the current timestep instead of the entire historical file.
+- **Semantic State Mapping:** We map raw, verbose CSV headers (e.g., `ZONE ONE:Zone Mean Air Temperature [C](TimeStep)`) to concise JSON keys (`avg_zone_temp_c`), vastly reducing the token payload sent to the LLM.
+
 ## 5. Agentic Autonomy & Self-Correction
 The LLM acts as an active controller. If it sets a temperature that results in the PMV index dropping below -0.5 in the next timestep, the prompt constraints force the LLM to recognize the comfort violation in its reasoning log and self-correct by raising the heating setpoint immediately. This creates a resilient, self-healing control strategy superior to static PID loops.

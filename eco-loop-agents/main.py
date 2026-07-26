@@ -50,11 +50,9 @@ LOG_FIELDS = [
 ]
 
 def init_log():
-    write_header = not os.path.exists(LOG_FILE)
-    f   = open(LOG_FILE, "a", newline="")
+    f   = open(LOG_FILE, "w", newline="")
     w   = csv.DictWriter(f, fieldnames=LOG_FIELDS, extrasaction="ignore")
-    if write_header:
-        w.writeheader()
+    w.writeheader()
     return f, w
 
 def log_step(writer, record: dict, run_type: str = "ai"):

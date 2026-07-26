@@ -62,11 +62,9 @@ def main():
     for zone in ZONES:
         sim.set_setpoint(zone, args.setpoint)
 
-    write_header = not os.path.exists(BASELINE_LOG)
-    log_f = open(BASELINE_LOG, "a", newline="")
+    log_f = open(BASELINE_LOG, "w", newline="")
     writer = csv.DictWriter(log_f, fieldnames=LOG_FIELDS, extrasaction="ignore")
-    if write_header:
-        writer.writeheader()
+    writer.writeheader()
 
     step = 0
     try:

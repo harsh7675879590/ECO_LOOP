@@ -114,17 +114,26 @@ try:
     baseline_df = pd.read_csv("baseline_results.csv")
     ai_df       = pd.read_csv("eco_loop_log.csv")
 
-    b_energy = baseline_df["energy_kwh"].max()
-    a_energy = ai_df["energy_kwh"].max()
-    savings  = ((b_energy - a_energy) / b_energy * 100) if b_energy > 0 else 0
+    b_steps  = len(baseline_df)
+    a_steps  = len(ai_df)
+
+    # Normalize to per-step averages so unequal run lengths compare fairly
+    b_energy_per_step = baseline_df["energy_kwh"].max() / b_steps if b_steps > 0 else 0
+    a_energy_per_step = ai_df["energy_kwh"].max()       / a_steps if a_steps > 0 else 0
+
+    b_energy = b_energy_per_step * b_steps   # raw totals (for display)
+    a_energy = a_energy_per_step * a_steps
+
+    savings  = ((b_energy_per_step - a_energy_per_step) / b_energy_per_step * 100) if b_energy_per_step > 0 else 0
 
     b_comfort = baseline_df["pmv"].between(-0.5, 0.5).mean() * 100
     a_comfort = ai_df["pmv"].between(-0.5, 0.5).mean() * 100
 
     print(f"\n     {'Metric':<25} {'Baseline':>12} {'AI Agent':>12} {'Delta':>10}")
     print(f"     {'-'*60}")
-    print(f"     {'Energy (kWh)':<25} {b_energy:>12.2f} {a_energy:>12.2f} {a_energy-b_energy:>+10.2f}")
-    print(f"     {'Energy Savings':<25} {'':>12} {'':>12} {savings:>+9.1f}%")
+    print(f"     {'Steps run':<25} {b_steps:>12} {a_steps:>12}")
+    print(f"     {'Energy/step (kWh)':<25} {b_energy_per_step:>12.4f} {a_energy_per_step:>12.4f} {a_energy_per_step-b_energy_per_step:>+10.4f}")
+    print(f"     {'Energy Savings':<25} {'':<12} {'':<12} {savings:>+9.1f}%")
     print(f"     {'PMV Comfort %':<25} {b_comfort:>11.1f}% {a_comfort:>11.1f}%")
     print()
 except Exception as e:

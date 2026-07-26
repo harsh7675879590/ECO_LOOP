@@ -311,12 +311,20 @@ if not has_ai:
 # ──────────────────────────────────────────────
 last = ai_df.iloc[-1]
 
-# Energy savings calculation
+# Energy savings calculation — normalize by timestep count so unequal runs compare fairly
+ai_steps   = len(ai_df)
+base_steps = len(base_df) if has_base else 1
+
 ai_energy   = last.get("energy_kwh", 0)
 base_energy = base_df.iloc[-1]["energy_kwh"] if has_base else None
+
+# Per-step average energy (fair comparison regardless of run length)
+ai_energy_per_step   = ai_energy / ai_steps if ai_steps > 0 else 0
+base_energy_per_step = (base_energy / base_steps) if (base_energy and base_steps > 0) else None
+
 savings_pct = (
-    round((1 - ai_energy / base_energy) * 100, 1)
-    if base_energy and base_energy > 0 else None
+    round((1 - ai_energy_per_step / base_energy_per_step) * 100, 1)
+    if base_energy_per_step and base_energy_per_step > 0 else None
 )
 
 pmv_ok_pct = round(ai_df["comfort_ok"].mean() * 100, 1) if "comfort_ok" in ai_df.columns else "N/A"
@@ -521,12 +529,15 @@ if has_base and savings_pct is not None:
 
     col_s1, col_s2, col_s3 = st.columns(3)
     with col_s1:
-        st.metric("AI Energy Used",       f"{ai_energy:.3f} kWh")
+        st.metric("AI Energy Used",       f"{ai_energy:.3f} kWh",
+                  delta=f"{ai_steps} steps  ({ai_energy_per_step:.3f} kWh/step)", delta_color="off")
     with col_s2:
-        st.metric("Baseline Energy Used", f"{base_energy:.3f} kWh")
+        st.metric("Baseline Energy Used", f"{base_energy:.3f} kWh",
+                  delta=f"{base_steps} steps  ({base_energy_per_step:.3f} kWh/step)" if base_energy_per_step else "", delta_color="off")
     with col_s3:
+        kwh_saved = (base_energy_per_step - ai_energy_per_step) * ai_steps if base_energy_per_step else 0
         st.metric("Energy Saved",         f"{savings_pct}%",
-                  delta=f"{base_energy - ai_energy:.3f} kWh saved")
+                  delta=f"{kwh_saved:.3f} kWh saved (normalized)")
 
 
 # ──────────────────────────────────────────────
