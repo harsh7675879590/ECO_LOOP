@@ -4,7 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-MIT-green) ![Hackathon](https://img.shields.io/badge/Built_for-Honeywell_Campus_Hackathon-FF0000)
 
-![Eco-Loop Building Agents Dashboard](docs/images/dashboard-hero.png)
+![Eco-Loop Building Agents Dashboard](eco-loop-agents/docs/images/dashboard-hero.png)
 
 ## Table of Contents
 - [Problem Statement](#problem-statement)
@@ -27,7 +27,7 @@ Commercial buildings account for nearly 40% of global energy consumption, yet mo
 
 ## Architecture Overview
 
-![Architecture Diagram](docs/images/architecture-diagram.png)
+![Architecture Diagram](eco-loop-agents/docs/images/architecture-diagram.png)
 
 ### Core Components
 
@@ -132,19 +132,19 @@ streamlit run dashboard.py
 The dashboard provides a complete control room view of the autonomous building:
 
 **Hero Banner + Live KPI Cards**
-![Hero and KPI Cards](docs/images/dashboard-hero.png)
+![Hero and KPI Cards](eco-loop-agents/docs/images/dashboard-hero.png)
 *Live KPI cards: Zone Temp, PMV Comfort Index, Energy Used, Energy Savings % and Comfort Rate.*
 
 **Building Telemetry — Temperature & PMV Charts**
-![Telemetry Charts](docs/images/dashboard-charts.png)
+![Telemetry Charts](eco-loop-agents/docs/images/dashboard-charts.png)
 *Real-time: AI zone temp (cyan) vs outdoor weather (amber) and PMV comfort line (magenta) vs baseline, with the green comfort band clearly marked.*
 
 **Energy Analysis — Cumulative kWh & HVAC Power Draw**
-![Energy Analysis Charts](docs/images/dashboard-kpis.png)
+![Energy Analysis Charts](eco-loop-agents/docs/images/dashboard-kpis.png)
 *Cumulative energy comparison (AI agent in green vs baseline in gray) and per-timestep HVAC power bars with cyan-to-magenta gradient coloring.*
 
 **Agent Decision Log + Results Summary**
-![Results Summary](docs/images/results-summary.png)
+![Results Summary](eco-loop-agents/docs/images/results-summary.png)
 *Live feed of LLM internal reasoning with timestep, PMV, and energy values — plus the final Results Summary box.*
 
 ---
